@@ -4,8 +4,7 @@ ARG DIRECTUS_VERSION=10.8.2
 FROM directus/directus:${DIRECTUS_VERSION}
 
 USER root
-RUN corepack enable \
-  && corepack prepare pnpm@8.9.0 --activate
+RUN npm install -g pnpm
 
 EXPOSE 80
 
