@@ -1,12 +1,20 @@
-# default version if empty 
+# default version if empty
 ARG DIRECTUS_VERSION=10.8.2
 
 FROM directus/directus:${DIRECTUS_VERSION}
 
 USER root
-RUN npm install -g pnpm
-
-EXPOSE 80
+# Directus >=11.10 runtime images remove npm/corepack; older tags still ship corepack.
+RUN if command -v pnpm >/dev/null 2>&1; then \
+		:; \
+	elif command -v corepack >/dev/null 2>&1; then \
+		corepack enable; \
+	else \
+		apk add --no-cache npm && npm install -g pnpm@10; \
+	fi \
+	&& chown -R node:node /directus
 
 USER node
+WORKDIR /directus
+RUN rm -f node_modules/.modules.yaml 2>/dev/null || true
 RUN pnpm install directus-extension-api-viewer
