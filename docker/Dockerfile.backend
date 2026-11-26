@@ -17,4 +17,3 @@ RUN if command -v pnpm >/dev/null 2>&1; then \
 USER node
 WORKDIR /directus
 RUN rm -f node_modules/.modules.yaml 2>/dev/null || true
-RUN pnpm install directus-extension-api-viewer
